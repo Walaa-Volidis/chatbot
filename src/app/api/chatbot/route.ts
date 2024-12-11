@@ -25,7 +25,8 @@ export async function POST(req: NextRequest) {
     });
     const response =
       chat.choices[0].message.content || "Sorry, No response from llama";
-    return NextResponse.json({ message: response });
+    console.log("hey response", response);
+    return NextResponse.json({ response });
   } catch (error) {
     console.error("Error in chat api", error);
     return NextResponse.json(
