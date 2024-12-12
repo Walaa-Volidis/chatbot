@@ -1,10 +1,12 @@
 import Groq from "groq-sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { SERVER_SETTINGS } from "@/settings";
 
 const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
+  apiKey: SERVER_SETTINGS.groqApiKey,
 });
+
 const ZMessageSchema = z.object({
   message: z.string(),
 });
