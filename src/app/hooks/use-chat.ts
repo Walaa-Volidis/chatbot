@@ -23,6 +23,7 @@ export const useChat = () => {
       text: input.trim(),
     };
 
+    ZMessageSchema.parse(userMessage);
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setLoading(true);
@@ -33,21 +34,14 @@ export const useChat = () => {
         body: JSON.stringify({ message: userMessage.text }),
       });
       const data = await response.json();
-      if (response.ok) {
-        const botMessage: Message = {
-          id: Date.now() + 1,
-          sender: "bot",
-          text: data.response,
-        };
-        setMessages((prev) => [...prev, botMessage]);
-      } else {
-        const errorMessage: Message = {
-          id: Date.now() + 1,
-          sender: "bot",
-          text: data.error,
-        };
-        setMessages((prev) => [...prev, errorMessage]);
-      }
+      const botMessage: Message = {
+        id: Date.now() + 1,
+        sender: "bot",
+        text: data.response,
+      };
+
+      ZMessageSchema.parse(botMessage);
+      setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.error("Error in chat api", error);
       const errorMessage: Message = {
@@ -55,6 +49,8 @@ export const useChat = () => {
         sender: "bot",
         text: "Error happened while processing your message",
       };
+
+      ZMessageSchema.parse(errorMessage);
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setLoading(false);
