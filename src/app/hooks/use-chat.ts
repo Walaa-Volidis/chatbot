@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { z } from "zod";
 
-const ZMessageSchema = z.object({
-  id: z.number(),
-  sender: z.enum(["user", "bot"]),
-  text: z.string(),
-});
+type Message = {
+  id: number;
+  sender: "user" | "bot";
+  text: string;
+};
 
-type Message = z.infer<typeof ZMessageSchema>;
 export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -23,7 +21,6 @@ export const useChat = () => {
       text: input.trim(),
     };
 
-    ZMessageSchema.parse(userMessage);
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setLoading(true);
@@ -40,7 +37,6 @@ export const useChat = () => {
         text: data.response,
       };
 
-      ZMessageSchema.parse(botMessage);
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.error("Error in chat api", error);
@@ -50,7 +46,6 @@ export const useChat = () => {
         text: "Error happened while processing your message",
       };
 
-      ZMessageSchema.parse(errorMessage);
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setLoading(false);
