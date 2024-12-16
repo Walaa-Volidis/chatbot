@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function ChatPage() {
-  const { messages, input, setInput, loading, handleSubmit } = useChat();
+  const { messages, input, setInput, loading, handleSubmit, typingMessage } =
+    useChat();
 
   return (
     <div className="w-full h-screen flex flex-col bg-white shadow-md rounded-lg overflow-hidden">
@@ -32,7 +33,15 @@ export default function ChatPage() {
           </div>
         ))}
 
-        {loading && (
+        {typingMessage && (
+          <div className="flex justify-start">
+            <div className="bg-gray-200 p-3 rounded-lg">
+              {typingMessage.text}
+            </div>
+          </div>
+        )}
+
+        {loading && !typingMessage && (
           <div className="flex justify-start animate-pulse">
             <div className="bg-gray-200 p-3 rounded-lg">
               <div className="h-4 w-20 bg-gray-300 rounded"></div>
