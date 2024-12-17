@@ -10,6 +10,7 @@ export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [typingMessage, setTypingMessage] = useState<Message | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,10 +35,23 @@ export const useChat = () => {
       const botMessage: Message = {
         id: Date.now() + 1,
         sender: "bot",
-        text: data.response,
+        text: "",
       };
 
-      setMessages((prev) => [...prev, botMessage]);
+      setTypingMessage(botMessage);
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index < data.response.length) {
+          botMessage.text += data.response[index];
+          setTypingMessage({ ...botMessage });
+          index++;
+        } else {
+          clearInterval(interval);
+          setMessages((prev) => [...prev, botMessage]);
+          setTypingMessage(null);
+          setLoading(false);
+        }
+      }, 50);
     } catch (error) {
       console.error("Error in chat api", error);
       const errorMessage: Message = {
@@ -47,7 +61,6 @@ export const useChat = () => {
       };
 
       setMessages((prev) => [...prev, errorMessage]);
-    } finally {
       setLoading(false);
     }
   };
@@ -56,6 +69,7 @@ export const useChat = () => {
     messages,
     input,
     loading,
+    typingMessage,
     setInput,
     handleSubmit,
   };
