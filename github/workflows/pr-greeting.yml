@@ -1,9 +1,9 @@
 name: PR Greeting
 on:
   push:
-    branches: ['create-api']
+    branches: ['streaming-response']
   pull_request:
-    branches: ['create-api']
+    branches: ['streaming-response']
 jobs:
   build:
     runs-on: ubuntu-latest
