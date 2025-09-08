@@ -30,5 +30,5 @@ jobs:
 
       - name: Run tests
         run: npm test
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
