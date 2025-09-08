@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 type Message = {
   id: number;
-  sender: "user" | "bot";
+  sender: 'user' | 'bot';
   text: string;
 };
 
 export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [typingMessage, setTypingMessage] = useState<Message | null>(null);
 
@@ -18,31 +18,33 @@ export const useChat = () => {
 
     const userMessage: Message = {
       id: Date.now(),
-      sender: "user",
+      sender: 'user',
       text: input.trim(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInput("");
+    setInput('');
     setLoading(true);
     try {
-      const response = await fetch("/api/chatbot", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage.text }),
       });
       const data = await response.json();
+      const responseText = data.response ?? '';
+
       const botMessage: Message = {
         id: Date.now() + 1,
-        sender: "bot",
-        text: "",
+        sender: 'bot',
+        text: '',
       };
 
       setTypingMessage(botMessage);
       let index = 0;
       const interval = setInterval(() => {
-        if (index < data.response.length) {
-          botMessage.text += data.response[index];
+        if (index < responseText.length) {
+          botMessage.text += responseText[index];
           setTypingMessage({ ...botMessage });
           index++;
         } else {
@@ -53,11 +55,11 @@ export const useChat = () => {
         }
       }, 50);
     } catch (error) {
-      console.error("Error in chat api", error);
+      console.error('Error in chat api', error);
       const errorMessage: Message = {
         id: Date.now() + 1,
-        sender: "bot",
-        text: "Error happened while processing your message",
+        sender: 'bot',
+        text: 'Error happened while processing your message',
       };
 
       setMessages((prev) => [...prev, errorMessage]);
