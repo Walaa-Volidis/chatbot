@@ -31,7 +31,6 @@ export async function POST(req: NextRequest) {
     });
     const response =
       chat.choices[0].message.content || 'Sorry, No response from llama';
-    console.log('hey response', response);
     ZMessageSchema.parse({ message: response });
     return NextResponse.json({ response });
   } catch (error) {
